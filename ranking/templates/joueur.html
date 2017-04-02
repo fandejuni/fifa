@@ -1,10 +1,91 @@
 {% extends 'base.html' %}
 {% block body %}
-Voilà les stats de
-{{ joueur.pseudo }}
-{% if request.user.is_authenticated %}
-    Hi
-{% else %}
-    No hi :'(
-{% endif %}
+    <h1>{{ joueur.pseudo }}</h1>
+
+<div id="column1" style="float:left; margin:0; width:40%;">
+    
+    <h1>Simple</h1>
+    <table>
+        <tr>
+            <th>Rang</th>
+            <th>Joueur</th>
+            <th>Points</th>
+            <th>Matchs</th>
+            <th>V</th>
+            <th>N</th>
+            <th>D</th>
+            <th>Diff</th>
+            <th>BP</th>
+            <th>BC</th>
+        </tr>
+        <tr>
+            <td>-</td>
+            <td><a class='joueur' href="{% url 'joueur' joueur.id %}">{{joueur.pseudo}}</a></td>
+            <td>{{joueur.simple_score}}</td>
+            <td>{{joueur.simple_matchs}}</td>
+            <td>{{joueur.simple_victoires}}</td>
+            <td>{{joueur.simple_nuls}}</td>
+            <td>{{joueur.simple_defaites}}</td>
+            <td>{{joueur.simple_diff}}</td>
+            <td>{{joueur.simple_buts_pour}}</td>
+            <td>{{joueur.simple_buts_contre}}</td>
+        </tr>
+    </table>
+
+    <h1>Matchs</h1>
+    <table>
+        {% for m in simple_matchs %}
+        <tr>
+            <td {% if m.winner == 1 %} style='font-weight:bold'{% endif %} >
+                <a class="joueur" href="{% url 'joueur' m.domicile.id %}">{{m.domicile.pseudo}}</a>
+            </td>
+            <td>{{m.buts_domicile}}</td>
+            <td>{{m.buts_exterieur}}</td>
+            <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
+                <a class='joueur' href="{% url 'joueur' m.exterieur.id %}">{{m.exterieur.pseudo}}</a>
+            </td>
+            <td>{{m.points}}</td>
+            <td>{{m.date | date:'d/m/y'}}</td>
+            <td>
+            {% if m.domicile == request.user.joueur %}
+                <a class="joueur" href="{% url 'annuler' m.id %}">Annuler</a>
+            {% else %}
+                -
+            {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div id="column2" style="float:left; margin-left:15%;width:40%;">
+<h1>Double</h1>
+<table>
+    <tr>
+        <th>Rang</th>
+        <th>Joueur</th>
+        <th>Points</th>
+        <th>Matchs</th>
+        <th>V</th>
+        <th>N</th>
+        <th>D</th>
+        <th>Diff</th>
+        <th>BP</th>
+        <th>BC</th>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td><a class='joueur' href="{% url 'joueur' joueur.id %}">{{joueur.pseudo}}</a></td>
+        <td>{{joueur.double_score}}</td>
+        <td>{{joueur.double_matchs}}</td>
+        <td>{{joueur.double_victoires}}</td>
+        <td>{{joueur.double_nuls}}</td>
+        <td>{{joueur.double_defaites}}</td>
+        <td>{{joueur.double_diff}}</td>
+        <td>{{joueur.double_buts_pour}}</td>
+        <td>{{joueur.double_buts_contre}}</td>
+    </tr>
+</table>
+</div>
+
 {% endblock %}

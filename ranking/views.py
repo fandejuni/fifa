@@ -1,18 +1,40 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 
+def annuler_match(request, match_id):
+    m = get_object_or_404(MatchSimple, pk=match_id)
+    joueur = request.user.joueur
+    if joueur == m.domicile:
+        m.delete()
+        calculate()
+        return redirect('joueur', joueur.id)
+    else:
+        return redirect('index')
+
 def index(request):
+    n_matchs = 10
     context = {
         'simple_ranking': Joueur.objects.order_by('-simple_score').all(),
         'double_ranking': Joueur.objects.order_by('-double_score').all(),
-        'simple_matchs': MatchSimple.objects.order_by('-date').all(),
-        'double_matchs': MatchDouble.objects.order_by('-date').all(),
+        'simple_matchs': MatchSimple.objects.order_by('-date').all()[:n_matchs],
+        'double_matchs': MatchDouble.objects.order_by('-date').all()[:n_matchs],
     }
     return render(request, 'index.html', context)
 
-def detail_joueur(request, joueur_id):
+def all_matchs(request):
     context = {
-        'joueur': get_object_or_404(Joueur, pk=joueur_id)
+        'simple_matchs': MatchSimple.objects.order_by('-date').all(),
+        'double_matchs': MatchDouble.objects.order_by('-date').all(),
+    }
+    return render(request, 'all_matchs.html', context)
+
+def detail_joueur(request, joueur_id):
+    simples_1 = MatchSimple.objects.filter(domicile__id = joueur_id)
+    simples_2 = MatchSimple.objects.filter(exterieur__id = joueur_id)
+    simples = simples_1 | simples_2
+    context = {
+        'joueur': get_object_or_404(Joueur, pk=joueur_id),
+        'simple_matchs': simples.order_by('-date').all(),
     }
     return render(request, 'joueur.html', context)
 
@@ -26,11 +48,11 @@ def traiter_match(request):
             m = MatchSimple(domicile=j1, exterieur=j2, buts_domicile=s1, buts_exterieur=s2)
             m.save()
             calculate()
-    return index(request)
+    return redirect('index')
 
 def recalculate(request):
     calculate()
-    return index(request)
+    return redirect('index')
 
 def calculate():
     for j in Joueur.objects.all():
@@ -88,5 +110,3 @@ def calculate():
 
         j1.save()
         j2.save()
-
-

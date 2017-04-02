@@ -8,14 +8,26 @@
   <title>FIFA Ranking 1.0</title>
 </head>
 <body>
-{% if request.user.is_authenticated %}
-    Bonjour {{ request.user.username }}
-    <a href="/logout/">Se déconnecter</a>
-{% else %}
-        <a href="/login/">Se connecter</a>
-{% endif %}
-<hr/>
+
+<ul>
+    <li><a class="menu" href="{% url 'index' %}">Home</a></li>
+    <li><a href="{% url 'matchs'%}" class="menu">Tous les matchs</a></li>
+
+    {% if request.user.is_authenticated %}
+        <li><a class="menu" href="{% url 'joueur' request.user.joueur.id %}">Mon profil</a></li>
+        <li><a class="menu" href="{% url 'logout' %}">Se déconnecter ({{request.user.joueur.pseudo}})</a></li>
+    {% else %}
+        <li><a class="menu" href="{% url 'login' %}">Se connecter</a></li>
+    {% endif %}
+
+</ul>
+
+<div style="padding:20px;margin-top:30px;">
+<div id="contentBox" style="margin:0px auto; width:100%">
 {% block body %}
 {% endblock %}
+</div>
+</div>
+
 </body>
 </html>

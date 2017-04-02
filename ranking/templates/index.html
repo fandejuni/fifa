@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 {% block body %}
-<div id="contentBox" style="margin:0px auto; width:100%">
-
 <div id="column1" style="float:left; margin:0; width:40%;">
     
     <h1>Simple</h1>
@@ -21,7 +19,7 @@
         {% for j in simple_ranking %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td><a href="{% url 'joueur' j.id %}">{{j.pseudo}}</a></td>
+            <td><a class='joueur' href="{% url 'joueur' j.id %}">{{j.pseudo}}</a></td>
             <td>{{j.simple_score}}</td>
             <td>{{j.simple_matchs}}</td>
             <td>{{j.simple_victoires}}</td>
@@ -39,12 +37,12 @@
         {% for m in simple_matchs %}
         <tr>
             <td {% if m.winner == 1 %} style='font-weight:bold'{% endif %} >
-                <a href="{% url 'joueur' m.domicile.id %}">{{m.domicile.pseudo}}</a>
+                <a class="joueur" href="{% url 'joueur' m.domicile.id %}">{{m.domicile.pseudo}}</a>
             </td>
             <td>{{m.buts_domicile}}</td>
             <td>{{m.buts_exterieur}}</td>
             <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
-                <a href="{% url 'joueur' m.exterieur.id %}">{{m.exterieur.pseudo}}</a>
+                <a class='joueur' href="{% url 'joueur' m.exterieur.id %}">{{m.exterieur.pseudo}}</a>
             </td>
             <td>{{m.points}}</td>
             <td>{{m.date | date:'d/m/y'}}</td>
@@ -102,7 +100,7 @@
     {% for j in double_ranking %}
     <tr>
         <td>{{ forloop.counter }}</td>
-        <td><a href="{% url 'joueur' j.id %}">{{j.pseudo}}</a></td>
+        <td><a class='joueur' href="{% url 'joueur' j.id %}">{{j.pseudo}}</a></td>
         <td>{{j.double_score}}</td>
         <td>{{j.double_matchs}}</td>
         <td>{{j.double_victoires}}</td>
