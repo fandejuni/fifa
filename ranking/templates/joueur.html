@@ -1,1 +1,10 @@
+{% extends 'base.html' %}
+{% block body %}
+Voilà les stats de
 {{ joueur.pseudo }}
+{% if request.user.is_authenticated %}
+    Hi
+{% else %}
+    No hi :'(
+{% endif %}
+{% endblock %}
