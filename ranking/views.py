@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 
+def reglement(request):
+    return render(request, 'reglement.html')
+
 def annuler_match(request, match_id):
     m = get_object_or_404(MatchSimple, pk=match_id)
     joueur = request.user.joueur

@@ -10,6 +10,7 @@
 <body>
 
 <ul>
+
     <li><a class="menu" href="{% url 'index' %}">Home</a></li>
     <li><a href="{% url 'matchs'%}" class="menu">Tous les matchs</a></li>
 
@@ -19,6 +20,8 @@
     {% else %}
         <li><a class="menu" href="{% url 'login' %}">Se connecter</a></li>
     {% endif %}
+
+    <li><a href="{% url 'reglement'%}" class="menu">Règlement</a></li>
 
 </ul>
 

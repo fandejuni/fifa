@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^recalculate/$', views.recalculate, name='recalculate'),
     url(r'^matchs/$', views.all_matchs, name='matchs'),
+    url(r'^reglement/$', views.reglement, name='reglement'),
     url(r'^$', views.index, name='index'),
 ]
