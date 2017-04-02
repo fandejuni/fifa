@@ -1,5 +1,15 @@
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:hover {
+    color: red;
+    text-decoration: underline;
+}
+
 body {
-	background: #DDDDDD;
+	background: #EEEEEE;
 }
 
 table {
@@ -15,9 +25,10 @@ td, th {
 }
 
 tr:nth-child(even) {
-    background-color: #EEEEEE;
+    background-color: #DDDDDD;
 }
 
 tr:nth-child(odd) {
 	background-color: #CAAADD;
 }
+

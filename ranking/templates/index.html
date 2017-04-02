@@ -38,15 +38,50 @@
     <table>
         {% for m in simple_matchs %}
         <tr>
-            <td><a href="{% url 'joueur' m.domicile.id %}">{{m.domicile.pseudo}}</a></td>
+            <td {% if m.winner == 1 %} style='font-weight:bold'{% endif %} >
+                <a href="{% url 'joueur' m.domicile.id %}">{{m.domicile.pseudo}}</a>
+            </td>
             <td>{{m.buts_domicile}}</td>
             <td>{{m.buts_exterieur}}</td>
-            <td><a href="{% url 'joueur' m.exterieur.id %}">{{m.exterieur.pseudo}}</a></td>
+            <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
+                <a href="{% url 'joueur' m.exterieur.id %}">{{m.exterieur.pseudo}}</a>
+            </td>
             <td>{{m.points}}</td>
             <td>{{m.date | date:'d/m/y'}}</td>
         </tr>
         {% endfor %}
     </table>
+    
+    <h1>Ajouter un match</h1>
+
+    {% if request.user.is_authenticated %}
+
+    {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+    <form action="{% url 'traiter_match' %}" method='post'>
+        {% csrf_token %}
+
+        <label for="adv">Adversaire :</label>
+        <select name="adv">
+            {% for j in simple_ranking %}
+                <option value="{{j.id}}">{{j.pseudo}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+
+        Score :
+        <input name="score_1" min="0" max="30" type="number" value="0"/>
+        -
+        <input name="score_2" min="0" max="30" type="number" value="0"/>
+
+
+        <br/><input type="submit" value="Valider"/>
+	</form>
+
+
+    {% else %}
+        Non connecté.
+    {% endif %}
+
 </div>
 
 <div id="column2" style="float:left; margin-left:15%;width:40%;">

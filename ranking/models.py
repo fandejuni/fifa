@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Joueur(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -44,6 +46,15 @@ class Joueur(models.Model):
     def __str__(self):
         return self.pseudo + " (" + str(self.simple_score) + ", " + str(self.double_score) + ")"
 
+@receiver(post_save, sender=User)
+def create_joueur(sender, instance, created, **kwargs):
+    if created:
+        Joueur.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_joueur(sender, instance, **kwargs):
+    instance.joueur.save()
+
 class MatchSimple(models.Model):
     domicile = models.ForeignKey('Joueur', related_name = 'dom')
     exterieur = models.ForeignKey('Joueur', related_name = 'exte')
@@ -51,6 +62,15 @@ class MatchSimple(models.Model):
     buts_domicile = models.IntegerField(default=0)
     buts_exterieur = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
+
+    @property
+    def winner(self):
+        if self.buts_domicile > self.buts_exterieur:
+            return 1.
+        elif self.buts_domicile < self.buts_exterieur:
+            return 0.
+        else:
+            return 0.5
 
     def __str__(self):
         return self.domicile.pseudo + " " + str(self.buts_domicile) + " - " + str(self.buts_exterieur) + " " + self.exterieur.pseudo

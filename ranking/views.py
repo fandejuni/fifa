@@ -11,13 +11,28 @@ def index(request):
     return render(request, 'index.html', context)
 
 def detail_joueur(request, joueur_id):
-    joueur = get_object_or_404(Joueur, pk=joueur_id)
     context = {
-        'joueur': joueur,
+        'joueur': get_object_or_404(Joueur, pk=joueur_id)
     }
     return render(request, 'joueur.html', context)
 
+def traiter_match(request):
+    if request.user.is_authenticated:
+        j1 = request.user.joueur
+        j2 = get_object_or_404(Joueur, pk=request.POST['adv'])
+        s1 = int(request.POST['score_1'])
+        s2 = int(request.POST['score_2'])
+        if j1.id != j2.id and 0 <= s1 <= 30 and 0 <= s2 <= 30:
+            m = MatchSimple(domicile=j1, exterieur=j2, buts_domicile=s1, buts_exterieur=s2)
+            m.save()
+            calculate()
+    return index(request)
+
 def recalculate(request):
+    calculate()
+    return index(request)
+
+def calculate():
     for j in Joueur.objects.all():
 
         j.simple_score = 500
@@ -36,7 +51,7 @@ def recalculate(request):
 
         j.save()
 
-    for m  in MatchSimple.objects.all():
+    for m  in MatchSimple.objects.order_by('date').all():
 
         j1 = m.domicile
         j2 = m.exterieur
@@ -47,22 +62,19 @@ def recalculate(request):
         j2.simple_buts_pour += m.buts_exterieur
         j2.simple_buts_contre += m.buts_domicile
 
-        W = 0.5 # 0.5 pour nul, 1 victoire j1, 0 victoire j2
+        W = m.winner
 
-        if m.buts_domicile > m.buts_exterieur:
+        if W == 1:
             j1.simple_victoires +=1
             j2.simple_defaites += 1
-            W = 1.
 
-        elif m.buts_domicile < m.buts_exterieur:
+        elif W == 0:
             j2.simple_victoires += 1
             j1.simple_defaites += 1
-            W = 0.
 
-        elif m.buts_domicile == m.buts_exterieur:
+        else:
             j2.simple_nuls += 1
             j1.simple_nuls += 1
-            W = 0.5
 
         D = j1.simple_score - j2.simple_score
         p = 1. / (1. + 10**(-D/400.))
@@ -77,4 +89,4 @@ def recalculate(request):
         j1.save()
         j2.save()
 
-    return index(request)
+
