@@ -1,0 +1,56 @@
+Classement simple :
+<table>
+    <tr>
+        <th>Joueur</th>
+        <th>Points</th>
+        <th>Matchs</th>
+        <th>V</th>
+        <th>N</th>
+        <th>D</th>
+        <th>Diff</th>
+        <th>BP</th>
+        <th>BC</th>
+    </tr>
+    {% for j in simple_ranking %}
+    <tr>
+        <td><a href="{% url 'joueur' j.id %}">{{j.pseudo}}</a></td>
+        <td>{{j.simple_score}}</td>
+        <td>{{j.simple_matchs}}</td>
+        <td>{{j.simple_victoires}}</td>
+        <td>{{j.simple_nuls}}</td>
+        <td>{{j.simple_defaites}}</td>
+        <td>{{j.simple_diff}}</td>
+        <td>{{j.simple_buts_pour}}</td>
+        <td>{{j.simple_buts_contre}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br/>
+
+Classement double :
+<table>
+    <tr>
+        <th>Joueur</th>
+        <th>Points</th>
+        <th>Matchs</th>
+        <th>V</th>
+        <th>N</th>
+        <th>D</th>
+        <th>Diff</th>
+        <th>BP</th>
+        <th>BC</th>
+    </tr>
+    {% for j in double_ranking %}
+    <tr>
+        <td><a href="{% url 'joueur' j.id %}">{{j.pseudo}}</a></td>
+        <td>{{j.double_score}}</td>
+        <td>{{j.double_matchs}}</td>
+        <td>{{j.double_victoires}}</td>
+        <td>{{j.double_nuls}}</td>
+        <td>{{j.double_defaites}}</td>
+        <td>{{j.double_diff}}</td>
+        <td>{{j.double_buts_pour}}</td>
+        <td>{{j.double_buts_contre}}</td>
+    </tr>
+    {% endfor %}
+</table>
