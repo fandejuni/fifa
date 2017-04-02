@@ -18,7 +18,7 @@
         </tr>
         {% for j in simple_ranking %}
         <tr>
-            <td>{{ forloop.counter }}</td>
+            <td>{{ j.simple_rang }}</td>
             <td><a class='joueur' href="{% url 'joueur' j.id %}">{{j.pseudo}}</a></td>
             <td>{{j.simple_score}}</td>
             <td>{{j.simple_matchs}}</td>
@@ -32,7 +32,7 @@
         {% endfor %}
     </table>
 
-    <h1>Les derniers matchs</h1>
+    <h1>Derniers matchs en simple</h1>
     <table>
         {% for m in simple_matchs %}
         <tr>
@@ -99,7 +99,7 @@
     </tr>
     {% for j in double_ranking %}
     <tr>
-        <td>{{ forloop.counter }}</td>
+        <td>{{ j.double_rang }}</td>
         <td><a class='joueur' href="{% url 'joueur' j.id %}">{{j.pseudo}}</a></td>
         <td>{{j.double_score}}</td>
         <td>{{j.double_matchs}}</td>
@@ -111,6 +111,78 @@
         <td>{{j.double_buts_contre}}</td>
     </tr>
     {% endfor %}
-</table>
+    </table>
+
+    <h1>Derniers matchs en double</h1>
+    <table>
+        {% for m in double_matchs %}
+        <tr>
+            <td {% if m.winner == 1 %} style='font-weight:bold'{% endif %} >
+                <a class="joueur" href="{% url 'joueur' m.domicile_1.id %}">{{m.domicile_1.pseudo}}</a>
+            </td>
+            <td {% if m.winner == 1 %} style='font-weight:bold'{% endif %} >
+                <a class="joueur" href="{% url 'joueur' m.domicile_2.id %}">{{m.domicile_2.pseudo}}</a>
+            </td>
+            <td>{{m.buts_domicile}}</td>
+            <td>{{m.buts_exterieur}}</td>
+            <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
+                <a class='joueur' href="{% url 'joueur' m.exterieur_1.id %}">{{m.exterieur_1.pseudo}}</a>
+            </td>
+            <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
+                <a class='joueur' href="{% url 'joueur' m.exterieur_2.id %}">{{m.exterieur_2.pseudo}}</a>
+            </td>
+            <td>{{m.points}}</td>
+            <td>{{m.date | date:'d/m/y'}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <h1>Ajouter un match</h1>
+
+    {% if request.user.is_authenticated %}
+
+    {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+    <form action="{% url 'traiter_match_double' %}" method='post'>
+        {% csrf_token %}
+
+        <label for="co">Coéquipier :</label>
+        <select name="co">
+            {% for j in double_ranking %}
+                <option value="{{j.id}}">{{j.pseudo}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+
+        <label for="adv_1">Adversaire :</label>
+        <select name="adv_1">
+            {% for j in double_ranking %}
+                <option value="{{j.id}}">{{j.pseudo}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+
+        <label for="adv_2">Adversaire :</label>
+        <select name="adv_2">
+            {% for j in double_ranking %}
+                <option value="{{j.id}}">{{j.pseudo}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+
+
+        Score :
+        <input name="score_1" min="0" max="30" type="number" value="0"/>
+        -
+        <input name="score_2" min="0" max="30" type="number" value="0"/>
+
+
+        <br/><input type="submit" value="Valider"/>
+	</form>
+
+
+    {% else %}
+        Non connecté.
+    {% endif %}
+
 </div>
 {% endblock %}

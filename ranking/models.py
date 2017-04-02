@@ -9,6 +9,7 @@ class Joueur(models.Model):
 
     # Simple
     simple_score = models.IntegerField(default=500)
+    simple_rang = models.IntegerField(default=0)
 
     simple_victoires = models.IntegerField(default=0)
     simple_nuls = models.IntegerField(default=0)
@@ -19,6 +20,7 @@ class Joueur(models.Model):
 
     # Double
     double_score = models.IntegerField(default=500)
+    double_rang = models.IntegerField(default=0)
 
     double_victoires = models.IntegerField(default=0)
     double_nuls = models.IntegerField(default=0)
@@ -82,11 +84,23 @@ class MatchDouble(models.Model):
     exterieur_2 = models.ForeignKey('Joueur', related_name = 'exte2')
     date = models.DateTimeField(auto_now=True)
     buts_domicile = models.IntegerField(default=0)
-    buts_exterieurs = models.IntegerField(default=0)
-    points_domicile = models.IntegerField(default=0)
-    points_exterieur = models.IntegerField(default=0)
+    buts_exterieur = models.IntegerField(default=0)
+    points = models.IntegerField(default=0)
+
+    @property
+    def winner(self):
+        if self.buts_domicile > self.buts_exterieur:
+            return 1.
+        elif self.buts_domicile < self.buts_exterieur:
+            return 0.
+        else:
+            return 0.5
 
     def __str__(self):
-        return buts_domicile
+        s = self.domicile_1.pseudo + ", "
+        s += self.domicile_2.pseudo + " - "
+        s += self.exterieur_1.pseudo + ", "
+        s += self.exterieur_2.pseudo
+        return s
 
 
