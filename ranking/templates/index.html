@@ -57,20 +57,25 @@
     {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
     <form action="{% url 'traiter_match' %}" method='post'>
         {% csrf_token %}
-
-        <label for="adv">Adversaire :</label>
-        <select name="adv">
-            {% for j in simple_ranking %}
-                <option value="{{j.id}}">{{j.pseudo}}</option>
-            {% endfor %}
-        </select>
-        <br/>
-
-        Score :
-        <input name="score_1" min="0" max="30" type="number" value="0"/>
-        -
-        <input name="score_2" min="0" max="30" type="number" value="0"/>
-
+        
+        <table>
+            <tr>
+                <td><label for="adv">Adversaire</label></td>
+                <td><select name="adv">
+                    {% for j in simple_ranking %}
+                        <option value="{{j.id}}">{{j.pseudo}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+            <tr>
+                <td>Score</td>
+                <td>
+                    <input name="score_1" min="0" max="30" type="number" value="0"/>
+                    -
+                    <input name="score_2" min="0" max="30" type="number" value="0"/>
+                </td>
+            </tr>
+        </table>
 
         <br/><input type="submit" value="Valider"/>
 	</form>
@@ -145,36 +150,40 @@
     <form action="{% url 'traiter_match_double' %}" method='post'>
         {% csrf_token %}
 
-        <label for="co">Coéquipier :</label>
-        <select name="co">
-            {% for j in double_ranking %}
-                <option value="{{j.id}}">{{j.pseudo}}</option>
-            {% endfor %}
-        </select>
-        <br/>
-
-        <label for="adv_1">Adversaire :</label>
-        <select name="adv_1">
-            {% for j in double_ranking %}
-                <option value="{{j.id}}">{{j.pseudo}}</option>
-            {% endfor %}
-        </select>
-        <br/>
-
-        <label for="adv_2">Adversaire :</label>
-        <select name="adv_2">
-            {% for j in double_ranking %}
-                <option value="{{j.id}}">{{j.pseudo}}</option>
-            {% endfor %}
-        </select>
-        <br/>
-
-
-        Score :
-        <input name="score_1" min="0" max="30" type="number" value="0"/>
-        -
-        <input name="score_2" min="0" max="30" type="number" value="0"/>
-
+        <table>
+            <tr>
+                <td><label for="co">Coéquipier</label></td>
+                <td><select name="co">
+                    {% for j in double_ranking %}
+                        <option value="{{j.id}}">{{j.pseudo}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+            <tr>
+                <td><label for="adv_1">Adversaire</label></td>
+                <td><select name="adv_1">
+                    {% for j in double_ranking %}
+                        <option value="{{j.id}}">{{j.pseudo}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+            <tr>
+                <td><label for="adv_2">Adversaire</label></td>
+                <td><select name="adv_2">
+                    {% for j in double_ranking %}
+                        <option value="{{j.id}}">{{j.pseudo}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+            <tr>
+                <td>Score</td>
+                <td>
+                    <input name="score_1" min="0" max="30" type="number" value="0"/>
+                    -
+                    <input name="score_2" min="0" max="30" type="number" value="0"/>
+                </td>
+            </tr>
+        </table>
 
         <br/><input type="submit" value="Valider"/>
 	</form>
