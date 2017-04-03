@@ -60,7 +60,7 @@ def save_user_joueur(sender, instance, **kwargs):
 class MatchSimple(models.Model):
     domicile = models.ForeignKey('Joueur', related_name = 'dom')
     exterieur = models.ForeignKey('Joueur', related_name = 'exte')
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now_add=True)
     buts_domicile = models.IntegerField(default=0)
     buts_exterieur = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
@@ -82,7 +82,7 @@ class MatchDouble(models.Model):
     domicile_2 = models.ForeignKey('Joueur', related_name = 'dom2')
     exterieur_1 = models.ForeignKey('Joueur', related_name = 'exte1')
     exterieur_2 = models.ForeignKey('Joueur', related_name = 'exte2')
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now_add=True)
     buts_domicile = models.IntegerField(default=0)
     buts_exterieur = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
