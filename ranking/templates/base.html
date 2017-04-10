@@ -15,7 +15,7 @@
     <li><a href="{% url 'matchs'%}" class="menu">Tous les matchs</a></li>
 
     {% if request.user.is_authenticated %}
-        <li><a class="menu" href="{% url 'joueur' request.user.joueur.id %}">Mon profil</a></li>
+        <li><a class="menu" href="{% url 'joueur' request.user.joueur.id %}">Mes matchs</a></li>
         <li><a class="menu" href="{% url 'logout' %}">Se déconnecter ({{request.user.joueur.pseudo}})</a></li>
     {% else %}
         <li><a class="menu" href="{% url 'login' %}">Se connecter</a></li>
