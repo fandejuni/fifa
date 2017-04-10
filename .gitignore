@@ -2,3 +2,4 @@ ranking/migrations/0*
 */__pycache__/*
 */*/__pycache__/*
 *.pyc
+backup.sh
