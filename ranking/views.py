@@ -147,7 +147,7 @@ def calculate():
             j1.simple_nuls += 1
 
         D = j1.simple_score - j2.simple_score
-        p = 1. / (1. + 10**(-D/400.))
+        p = 1. / (1. + 10**(-D/200.))
         points = int(20 * (W - p))
 
         m.points = points
@@ -197,7 +197,7 @@ def calculate():
             j4.double_nuls += 1
 
         D = (j1.double_score + j2.double_score) - (j3.double_score + j4.double_score)
-        p = 1. / (1. + 10**(-D/800.)) # 800 car on "divise" D par 2
+        p = 1. / (1. + 10**(-D/400.)) # 800 car on "divise" D par 2
         points = int(20 * (W - p))
 
         m.points = points
