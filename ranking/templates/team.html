@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div id="column1" style="float:left; margin:0; width:40%;">
+
+    <h1>Les joueurs</h1>
+
+    <form action="{% url 'team' %}" method='post'>
+        {% csrf_token %}
+
+        <table>
+            <tr>
+                <td><label for="adv1">Joueur 1</label></td>
+                <td><select name="adv1">
+                    {% for j in players %}
+                        <option {% if j == d1 %} selected="selected" {% endif %} value="{{j.id}}">{{j.pseudo}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+            <tr>
+                <td><label for="adv2">Joueur 2</label></td>
+                <td><select name="adv2">
+                    {% for j in players %}
+                        <option {% if j == d2 %} selected="selected" {% endif %} value="{{j.id}}">{{j.pseudo}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+             <tr>
+                <td><label for="adv3">Joueur 3</label></td>
+                <td><select name="adv3">
+                    {% for j in players %}
+                        <option {% if j == e1 %} selected="selected" {% endif %} value="{{j.id}}">{{j.pseudo}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+             <tr>
+                <td><label for="adv4">Joueur 4</label></td>
+                <td><select name="adv4">
+                    {% for j in players %}
+                        <option {% if j == e2 %} selected="selected" {% endif %} value="{{j.id}}">{{j.pseudo}}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+        </table>
+
+        <br/><input type="submit" value="Constituer les équipes"/><br/><br/>
+	</form>
+</div>
+
+{% if d1 and d2 and e1 and e2 %}
+<div id="column2" style="float:left; margin-left:15%;width:40%;">
+    <h1>Les équipes</h1>
+    <table>
+        <tr>
+            <td rowspan="2">Domicile</td>
+            <td>{{ d1.pseudo }}</td>
+            <td rowspan="2">{{c1}} %</td>
+        </tr>
+        <tr>
+            <td>{{ d2.pseudo }}</td>
+        </tr>
+        <tr>
+            <td rowspan="2">Extérieur</td>
+            <td>{{ e1.pseudo }}</td>
+            <td rowspan="2">{{c2}} %</td>
+        </tr>
+        <tr>
+            <td>{{ e2.pseudo }}</td>
+        </tr>
+    </table>
+</div>
+{% endif %}
+{% endblock %}
