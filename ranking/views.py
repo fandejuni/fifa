@@ -85,16 +85,25 @@ def team(request):
         if len(s) == 4:
             dom = set(random.sample(s, 2))
             exte = s - dom
-            print(s)
-            print(dom)
-            print(exte)
-            print(s.pop())
+
+            d1 = get_object_or_404(Joueur, pk=dom.pop())
+            d2 = get_object_or_404(Joueur, pk=dom.pop())
+            e1 = get_object_or_404(Joueur, pk=exte.pop())
+            e2 = get_object_or_404(Joueur, pk=exte.pop())
+
+            D = (d1.double_score + d2.double_score) - (e1.double_score + e2.double_score)
+            p = 1. / (1. + 10**(-D/400.))
+
+            print(p)
+
             context = {
                 'players': Joueur.objects.order_by('double_rang').all(),
-                'd1' : get_object_or_404(Joueur, pk=dom.pop()),
-                'd2' : get_object_or_404(Joueur, pk=dom.pop()),
-                'e1' : get_object_or_404(Joueur, pk=exte.pop()),
-                'e2' : get_object_or_404(Joueur, pk=exte.pop()),
+                'd1' : d1,
+                'd2' : d2,
+                'e1' : e1,
+                'e2' : e2,
+                'c1' : int(round(p * 100, 0)),
+                'c2' : int(round((1 - p) * 100, 0)),
             }
     return render(request, 'team.html', context)
 
