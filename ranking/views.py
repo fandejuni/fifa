@@ -138,14 +138,14 @@ def recalculate(request):
 def calculate():
     for j in Joueur.objects.all():
 
-        j.simple_score = 500
+        j.simple_score = 200
         j.simple_victoires = 0
         j.simple_nuls = 0
         j.simple_defaites = 0
         j.simple_buts_pour = 0
         j.simple_buts_contre = 0
 
-        j.double_score = 500
+        j.double_score = 200
         j.double_victoires = 0
         j.double_nuls = 0
         j.double_defaites = 0
