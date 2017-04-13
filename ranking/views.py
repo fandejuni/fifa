@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
+import random
 
 def reglement(request):
     return render(request, 'reglement.html')
@@ -73,6 +74,29 @@ def traiter_match(request):
             m.save()
             calculate()
     return redirect('index')
+
+def team(request):
+    P = request.POST
+    context = {
+        'players': Joueur.objects.order_by('double_rang').all(),
+    }
+    if 'adv1' in P and 'adv2' in P and 'adv3' in P and 'adv4' in P:
+        s = set([P['adv1'], P['adv2'], P['adv3'], P['adv4']])
+        if len(s) == 4:
+            dom = set(random.sample(s, 2))
+            exte = s - dom
+            print(s)
+            print(dom)
+            print(exte)
+            print(s.pop())
+            context = {
+                'players': Joueur.objects.order_by('double_rang').all(),
+                'd1' : get_object_or_404(Joueur, pk=dom.pop()),
+                'd2' : get_object_or_404(Joueur, pk=dom.pop()),
+                'e1' : get_object_or_404(Joueur, pk=exte.pop()),
+                'e2' : get_object_or_404(Joueur, pk=exte.pop()),
+            }
+    return render(request, 'team.html', context)
 
 def traiter_match_double(request):
     if request.user.is_authenticated:

@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^recalculate/$', views.recalculate, name='recalculate'),
     url(r'^matchs/$', views.all_matchs, name='matchs'),
     url(r'^reglement/$', views.reglement, name='reglement'),
+    url(r'^team/$', views.team, name='team'),
     url(r'^$', views.index, name='index'),
 ]
