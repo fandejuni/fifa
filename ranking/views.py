@@ -72,7 +72,8 @@ def traiter_match(request):
         if j1 != j2 and 0 <= s1 <= 30 and 0 <= s2 <= 30:
             m = MatchSimple(domicile=j1, exterieur=j2, buts_domicile=s1, buts_exterieur=s2)
             m.save()
-            calculate()
+            update_simple(m)
+	    update_ranking()
     return redirect('index')
 
 def team(request):
@@ -127,7 +128,8 @@ def traiter_match_double(request):
         if b:
             m = MatchDouble(domicile_1=j1, domicile_2=j2, exterieur_1 = j3, exterieur_2 = j4, buts_domicile=s1, buts_exterieur=s2)
             m.save()
-            calculate()
+            update_double(m)
+	    update_ranking()
     return redirect('index')
 
 
@@ -135,17 +137,110 @@ def recalculate(request):
     calculate()
     return redirect('index')
 
+def update_simple(m):
+
+    j1 = m.domicile
+    j2 = m.exterieur
+    
+    j1.simple_buts_pour += m.buts_domicile
+    j1.simple_buts_contre += m.buts_exterieur
+    
+    j2.simple_buts_pour += m.buts_exterieur
+    j2.simple_buts_contre += m.buts_domicile
+    
+    W = m.winner
+    
+    if W == 1:
+        j1.simple_victoires +=1
+        j2.simple_defaites += 1
+    
+    elif W == 0:
+        j2.simple_victoires += 1
+        j1.simple_defaites += 1
+    
+    else:
+        j2.simple_nuls += 1
+        j1.simple_nuls += 1
+    
+    D = j1.simple_score - j2.simple_score
+    p = 1. / (1. + 10**(-D/200.))
+    points = int(20 * (W - p))
+    
+    m.points = points
+    m.save()
+    
+    j1.simple_score += points
+    j2.simple_score -= points
+    
+    j1.save()
+    j2.save()
+
+def update_double(m):
+
+    j1 = m.domicile_1
+    j2 = m.domicile_2
+    j3 = m.exterieur_1
+    j4 = m.exterieur_2
+    
+    j1.double_buts_pour += m.buts_domicile
+    j2.double_buts_pour += m.buts_domicile
+    j1.double_buts_contre += m.buts_exterieur
+    j2.double_buts_contre += m.buts_exterieur
+    
+    j3.double_buts_pour += m.buts_exterieur
+    j4.double_buts_pour += m.buts_exterieur
+    j3.double_buts_contre += m.buts_domicile
+    j4.double_buts_contre += m.buts_domicile
+    
+    W = m.winner
+    
+    if W == 1:
+        j1.double_victoires +=1
+        j2.double_victoires +=1
+        j3.double_defaites += 1
+        j4.double_defaites += 1
+    
+    elif W == 0:
+        j3.double_victoires += 1
+        j4.double_victoires += 1
+        j1.double_defaites += 1
+        j2.double_defaites += 1
+    
+    else:
+        j1.double_nuls += 1
+        j2.double_nuls += 1
+        j3.double_nuls += 1
+        j4.double_nuls += 1
+    
+    D = (j1.double_score + j2.double_score) - (j3.double_score + j4.double_score)
+    p = 1. / (1. + 10**(-D/400.)) # 800 car on "divise" D par 2
+    points = int(20 * (W - p))
+    
+    m.points = points
+    m.save()
+    
+    j1.double_score += points
+    j2.double_score += points
+    j3.double_score -= points
+    j4.double_score -= points
+    
+    j1.save()
+    j2.save()
+    j3.save()
+    j4.save()
+
 def calculate():
+
     for j in Joueur.objects.all():
 
-        j.simple_score = 200
+        j.simple_score = 100
         j.simple_victoires = 0
         j.simple_nuls = 0
         j.simple_defaites = 0
         j.simple_buts_pour = 0
         j.simple_buts_contre = 0
 
-        j.double_score = 200
+        j.double_score = 100
         j.double_victoires = 0
         j.double_nuls = 0
         j.double_defaites = 0
@@ -155,96 +250,14 @@ def calculate():
         j.save()
 
     for m in MatchSimple.objects.order_by('date').all():
-
-        j1 = m.domicile
-        j2 = m.exterieur
-
-        j1.simple_buts_pour += m.buts_domicile
-        j1.simple_buts_contre += m.buts_exterieur
-
-        j2.simple_buts_pour += m.buts_exterieur
-        j2.simple_buts_contre += m.buts_domicile
-
-        W = m.winner
-
-        if W == 1:
-            j1.simple_victoires +=1
-            j2.simple_defaites += 1
-
-        elif W == 0:
-            j2.simple_victoires += 1
-            j1.simple_defaites += 1
-
-        else:
-            j2.simple_nuls += 1
-            j1.simple_nuls += 1
-
-        D = j1.simple_score - j2.simple_score
-        p = 1. / (1. + 10**(-D/200.))
-        points = int(20 * (W - p))
-
-        m.points = points
-        m.save()
-
-        j1.simple_score += points
-        j2.simple_score -= points
-
-        j1.save()
-        j2.save()
+	update_simple(m)
 
     for m in MatchDouble.objects.order_by('date').all():
+	update_double(m)
+	
+    update_ranking()
 
-        j1 = m.domicile_1
-        j2 = m.domicile_2
-        j3 = m.exterieur_1
-        j4 = m.exterieur_2
-
-        j1.double_buts_pour += m.buts_domicile
-        j2.double_buts_pour += m.buts_domicile
-        j1.double_buts_contre += m.buts_exterieur
-        j2.double_buts_contre += m.buts_exterieur
-
-        j3.double_buts_pour += m.buts_exterieur
-        j4.double_buts_pour += m.buts_exterieur
-        j3.double_buts_contre += m.buts_domicile
-        j4.double_buts_contre += m.buts_domicile
-
-        W = m.winner
-
-        if W == 1:
-            j1.double_victoires +=1
-            j2.double_victoires +=1
-            j3.double_defaites += 1
-            j4.double_defaites += 1
-
-        elif W == 0:
-            j3.double_victoires += 1
-            j4.double_victoires += 1
-            j1.double_defaites += 1
-            j2.double_defaites += 1
-
-        else:
-            j1.double_nuls += 1
-            j2.double_nuls += 1
-            j3.double_nuls += 1
-            j4.double_nuls += 1
-
-        D = (j1.double_score + j2.double_score) - (j3.double_score + j4.double_score)
-        p = 1. / (1. + 10**(-D/400.)) # 800 car on "divise" D par 2
-        points = int(20 * (W - p))
-
-        m.points = points
-        m.save()
-
-        j1.double_score += points
-        j2.double_score += points
-        j3.double_score -= points
-        j4.double_score -= points
-
-        j1.save()
-        j2.save()
-        j3.save()
-        j4.save()
+def update_ranking():
 
     i = 1
     for j in Joueur.objects.order_by('-simple_score').all():

@@ -8,7 +8,7 @@ class Joueur(models.Model):
     pseudo = models.CharField(max_length = 50, default="Pax lambda")
 
     # Simple
-    simple_score = models.IntegerField(default=500)
+    simple_score = models.IntegerField(default=100)
     simple_rang = models.IntegerField(default=0)
 
     simple_victoires = models.IntegerField(default=0)
@@ -19,7 +19,7 @@ class Joueur(models.Model):
     simple_buts_contre = models.IntegerField(default=0)
 
     # Double
-    double_score = models.IntegerField(default=500)
+    double_score = models.IntegerField(default=100)
     double_rang = models.IntegerField(default=0)
 
     double_victoires = models.IntegerField(default=0)
