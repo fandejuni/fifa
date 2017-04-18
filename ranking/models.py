@@ -8,7 +8,7 @@ class Joueur(models.Model):
     pseudo = models.CharField(max_length = 50, default="Pax lambda")
 
     # Simple
-    simple_score = models.IntegerField(default=100)
+    simple_score = models.FloatField(default=100)
     simple_rang = models.IntegerField(default=0)
 
     simple_victoires = models.IntegerField(default=0)
@@ -19,7 +19,7 @@ class Joueur(models.Model):
     simple_buts_contre = models.IntegerField(default=0)
 
     # Double
-    double_score = models.IntegerField(default=100)
+    double_score = models.FloatField(default=100)
     double_rang = models.IntegerField(default=0)
 
     double_victoires = models.IntegerField(default=0)
@@ -63,7 +63,7 @@ class MatchSimple(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     buts_domicile = models.IntegerField(default=0)
     buts_exterieur = models.IntegerField(default=0)
-    points = models.IntegerField(default=0)
+    points = models.FloatField(default=0)
 
     @property
     def winner(self):
@@ -85,7 +85,7 @@ class MatchDouble(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     buts_domicile = models.IntegerField(default=0)
     buts_exterieur = models.IntegerField(default=0)
-    points = models.IntegerField(default=0)
+    points = models.FloatField(default=0)
 
     @property
     def winner(self):

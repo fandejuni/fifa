@@ -2,6 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 import random
 
+def decima(x):
+    return '{0:.2f}'.format(x)
+
 def reglement(request):
     return render(request, 'reglement.html')
 
@@ -95,8 +98,6 @@ def team(request):
             D = (d1.double_score + d2.double_score) - (e1.double_score + e2.double_score)
             p = 1. / (1. + 10**(-D/400.))
 
-            print(p)
-
             context = {
                 'players': Joueur.objects.order_by('double_rang').all(),
                 'd1' : d1,
@@ -164,7 +165,7 @@ def update_simple(m):
     
     D = j1.simple_score - j2.simple_score
     p = 1. / (1. + 10**(-D/200.))
-    points = int(20 * (W - p))
+    points = 20 * (W - p)
     
     m.points = points
     m.save()
@@ -214,7 +215,7 @@ def update_double(m):
     
     D = (j1.double_score + j2.double_score) - (j3.double_score + j4.double_score)
     p = 1. / (1. + 10**(-D/400.)) # 800 car on "divise" D par 2
-    points = int(20 * (W - p))
+    points = 20 * (W - p)
     
     m.points = points
     m.save()
