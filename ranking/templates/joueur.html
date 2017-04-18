@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block body %}
+{% load app_filter %}
+
     <h1>Profil de {{ joueur.pseudo }}</h1>
 
 <div id="column1" style="float:left; margin:0; width:40%;">
@@ -21,7 +23,7 @@
         <tr>
             <td>{{ joueur.simple_rang }}</td>
             <td><a class='joueur' href="{% url 'joueur' joueur.id %}">{{joueur.pseudo}}</a></td>
-            <td>{{joueur.simple_score}}</td>
+            <td>{{joueur.simple_score|decimal}}</td>
             <td>{{joueur.simple_matchs}}</td>
             <td>{{joueur.simple_victoires}}</td>
             <td>{{joueur.simple_nuls}}</td>
@@ -44,7 +46,7 @@
             <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
                 <a class='joueur' href="{% url 'joueur' m.exterieur.id %}">{{m.exterieur.pseudo}}</a>
             </td>
-            <td>{{m.points}}</td>
+            <td>{{m.points|decimal}}</td>
             <td>{{m.date | date:'d/m/y'}}</td>
             <td>
             {% if m.domicile == request.user.joueur %}
@@ -76,7 +78,7 @@
     <tr>
         <td>{{ joueur.double_rang }}</td>
         <td><a class='joueur' href="{% url 'joueur' joueur.id %}">{{joueur.pseudo}}</a></td>
-        <td>{{joueur.double_score}}</td>
+        <td>{{joueur.double_score|decimal}}</td>
         <td>{{joueur.double_matchs}}</td>
         <td>{{joueur.double_victoires}}</td>
         <td>{{joueur.double_nuls}}</td>
@@ -105,7 +107,7 @@
         <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
             <a class='joueur' href="{% url 'joueur' m.exterieur_2.id %}">{{m.exterieur_2.pseudo}}</a>
         </td>
-        <td>{{m.points}}</td>
+        <td>{{m.points|decimal}}</td>
         <td>{{m.date | date:'d/m/y'}}</td>
         <td>
         {% if m.domicile_1 == request.user.joueur %}

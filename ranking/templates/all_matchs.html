@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block body %}
+{% load app_filter %}
 <div id="column1" style="float:left; margin:0; width:40%;">
     
     <h1>Matchs en simple</h1>
@@ -14,7 +15,7 @@
             <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
                 <a href="{% url 'joueur' m.exterieur.id %}">{{m.exterieur.pseudo}}</a>
             </td>
-            <td>{{m.points}}</td>
+            <td>{{m.points|decimal}}</td>
             <td>{{m.date | date:'d/m/y'}}</td>
         </tr>
         {% endfor %}
@@ -42,7 +43,7 @@
         <td {% if m.winner == 0 %} style='font-weight:bold'{% endif %} >
             <a class='joueur' href="{% url 'joueur' m.exterieur_2.id %}">{{m.exterieur_2.pseudo}}</a>
         </td>
-        <td>{{m.points}}</td>
+        <td>{{m.points|decimal}}</td>
         <td>{{m.date | date:'d/m/y'}}</td>
     </tr>
     {% endfor %}
